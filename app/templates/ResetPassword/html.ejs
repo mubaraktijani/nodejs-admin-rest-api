@@ -1,0 +1,38 @@
+<%- include('../includes/header', {logo: logo}); %>
+
+<table cellpadding="0" cellspacing="0">
+    <tr>
+        <td class="content-block">
+            <h1>Password Reset</h1>
+        </td>
+    </tr>
+    <tr>
+        <td class="content-block">
+            <p>
+                Hi <%= name %>!
+            </p>
+            <p>
+                You are receiving this because you(or someone else)
+                have requested the reset of the password for your account. Please click the button below to reset your
+                password.
+            </p>
+        </td>
+    </tr>
+    <tr>
+        <td class="content-block aligncenter">
+            <a href="<%= token %>" class="btn-primary">Reset Password</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <hr />
+            <p class="small">
+                if you didn't request to change your password, simply delete or ignore
+                this email.<br />
+                You don't have to do anything. So that's easy
+            </p>
+        </td>
+    </tr>
+</table>
+
+<%- include('../includes/footer', {sender: sender, web_domain: web_domain}); %>

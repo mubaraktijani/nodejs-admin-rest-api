@@ -1,34 +1,27 @@
 'use strict',
 
 require('dotenv').config();
-const app = require('./app');
 
-const parseName = (name) => {
-    return name.replace(/\ /g, ".").toLowerCase();
-}
-
-const OPTIONS = {
-    algorithm   : 'HS256',
-    expiresIn   : process.env.JWT_EXPIRATION || '10h',
-    audience    : 'users.api.' + parseName(app.NAME),
-    issuer      : 'api.' + parseName(app.NAME),
-    jwtid       : 'jwt.api.' + parseName(app.NAME),
-    subject     : parseName(app.NAME),
-}
+const appName = app.config.core.Name.replace(/\ /g, '-').toLowerCase();
 
 module.exports = {
-
-    ENCRYPTION          : process.env.JWT_ENCRYPTION || 'jwt_please_change',
-    
-    OPTIONS             : OPTIONS,
-
-    DECODE              : {
-        complete        : true,
-        json            : true,
+    Secret: process.env.JWT_ENCRYPTION || 'jwt_please_change',
+    Options: {
+        algorithm: 'HS256',
+        expiresIn: process.env.JWT_EXPIRATION || '10h',
+        audience: 'users-' + appName,
+        issuer: appName,
+        jwtid: 'jwt-' + appName,
+        subject: appName,
     },
-
-    WHITELISTED_ROUTES  : [
-        '/api/auth/login',
-        '/api/auth/signup'
+    WhitelistedRoutes: [
+        '/api/v1/auth/login',
+        '/api/v1/auth/signup',
+        '/api/v1/auth/resend',
+        '/api/v1/auth/forgot',
+        '/api/v1/subscriptions',
+        /^\/api\/v1\/subscriptions\/.*/,
+        /^\/api\/v1\/auth\/confirmation\/.*/,
+        /^\/api\/v1\/auth\/reset\/.*/,
     ]
 };

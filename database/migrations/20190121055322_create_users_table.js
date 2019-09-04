@@ -9,9 +9,10 @@ exports.up = (knex, Promise) => {
             table.string('email').notNull().unique();
             table.string('password');
             table.string('picture').nullable();
+            table.boolean('isVerified').notNullable().default(false);
+            table.boolean('enabled').notNullable().default(true);
             table.string('remember_token').nullable();
             table.timestamp('last_logged_in_at').nullable();
-            table.boolean('enabled').default(1);
             table.timestamps(true, true);
         })
         .then(() => console.log('Users Table is Created!')),

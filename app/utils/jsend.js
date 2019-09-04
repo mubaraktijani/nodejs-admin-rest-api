@@ -1,9 +1,19 @@
 'use strict';
 
 function formatJSend(req, res, body) {
-    function formatError(res, body) {
-        const isClientError = res.statusCode >= 400 && res.statusCode < 500;
-        
+    function formatError(res, body) {        
+        if (body.name === 'AuthorizationError') {
+            body.status = 401;
+
+            body.name = 'UnauthorizedError';
+            body.code = body.name;
+            body.stack = body.AuthorizationError;
+            res.statusCode = (typeof body.status === 'number') ? body.status : res.statusCode;
+        }
+
+        body = (body.body !== undefined) ? body.body : body;
+        const isClientError = res.statusCode >= 400 && res.statusCode <= 500;
+
         if (isClientError) {
             return {
                 status: 'error',
@@ -23,25 +33,21 @@ function formatJSend(req, res, body) {
     }
 
     function formatSuccess(res, body) {
-        if (body.data && body.pagination) {
-            return {
-                status: 'success',
-                data: body.data,
-                pagination: body.pagination,
-            };
-        }
+        let successRes = {};
+
+        successRes.status = 'success';
 
         if (typeof body === 'string') {
-            return {
-                status: 'success',
-                message: body
-            };
+            successRes.message = body;
+            return successRes;
         }
 
-        return {
-            status: 'success',
-            data: body
-        };
+        successRes.user = (body.user) ? body.user : undefined;
+        successRes.data = (body.data) ? body.data : body;
+        successRes.token = (body.token) ? body.token : undefined;
+        successRes.pagination = (body.pagination) ? body.pagination : undefined;
+
+        return successRes;
     }
 
     let response;

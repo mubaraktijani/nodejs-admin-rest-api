@@ -7,7 +7,7 @@ require('dotenv').config();
 const API_ROOT  = '/api';
 
 module.exports = {
-    APP             : require('./app'),
+    APP             : require('./core'),
     
     JWT             : require('./jwt'),
 

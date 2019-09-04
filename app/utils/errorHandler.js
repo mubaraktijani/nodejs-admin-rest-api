@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports.register = (server) => {
+module.exports = (server) => {
     var httpErr = require('restify-errors');
 
     server.on('NotFound', (req, res) => {
@@ -27,10 +27,12 @@ module.exports.register = (server) => {
         );
     });
 
-    server.on('restifyError', (req, res, err, error) => {
-        res.send(
-            new httpErr.InternalServerError(error)
-        );
+    server.on('restifyError', (req, res, err, next) => {
+        if (process.env.NODE_ENV === 'test') {
+            Log.error(err.message);
+        }
+        res.send(err);
+        return next();
     });
 
     /**

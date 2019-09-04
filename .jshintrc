@@ -4,7 +4,16 @@
 	"node": true,
 	"globals"      : {
 		"Promise"   : true,
-		"App": true,
-		"Config": true
+		"Log": true,
+		"app": true,
+		"Auth": true,
+		"Bookshelf": true,
+		
+		"describe": false,
+		"it": false,
+		"before": false,
+		"beforeEach": false,
+		"after": false,
+		"afterEach": false
 	}
 }

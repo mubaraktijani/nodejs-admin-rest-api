@@ -1,30 +1,61 @@
 'use strict';
 
-const { createLogger, format, transports } = require('winston');
-const { combine, timestamp, label, colorize, simple, errors, splat } = format;
+const {
+    createLogger,
+    format,
+    transports
+} = require('winston');
+const {
+    combine,
+    timestamp,
+    label,
+    colorize,
+    simple,
+    errors,
+    splat
+} = format;
+
+const DevLevels = ['warn', 'info', 'http', 'silly', 'debug', 'verbose'];
+const testLevels = ['error'];
 
 const createTransports = function (config) {
     const customTransports = [];
-  
+
     // setup the file transport
-    if (config.file) {
-  
+    if (config.File) {
+        let path = config.File.replace(config.File.split('/').pop(), '');
+        
         // setup the log transport
         customTransports.push(
             new transports.File({
-                filename: config.file,
-                level: config.level,
+                levels: DevLevels,
+                filename: config.File,
                 json: false,
                 prettyPrint: true,
+                format: combine(
+                    colorize(),
+                ),
             })
         );
+
+        testLevels.forEach(level => customTransports.push(
+            new transports.File({
+                level: level,
+                filename: `${path}${level}s.log`,
+                json: false,
+                prettyPrint: true,
+                format: combine(
+                    colorize(),
+                )
+            })
+        ));
     }
 
     // if config.console is set to true, a console logger will be included.
-    if (config.console) {
+    if (config.Console && process.env.NODE_ENV !== 'test') {
         customTransports.push(
             new transports.Console({
-                level: config.level,
+                level: config.Level,
                 format: combine(
                     colorize(),
                     simple()
@@ -37,24 +68,25 @@ const createTransports = function (config) {
 };
 
 module.exports = {
-    create: (config) => {
+    create: (options) => {
         return createLogger({
 
-            level: config.level,
+            level: options.Level,
 
             exitOnError: false,
 
             format: combine(
-                label({label: config.NAME}),
                 timestamp({
                     format: 'YYYY-MM-DD HH:mm:ss'
                 }),
-                errors({ stack: true }),
-                splat(), 
+                errors({
+                    stack: true
+                }),
+                splat(),
                 simple()
             ),
 
-            transports: createTransports(config)
+            transports: createTransports(options)
         });
     }
 };

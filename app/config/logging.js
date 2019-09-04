@@ -1,9 +1,11 @@
 'use strict',
 
 require('dotenv').config();
+const config = require('./core');
 
 module.exports = {
-    file        : process.env.LOG_PATH,
-    level       : process.env.LOG_LEVEL || 'info',
-    console     : process.env.LOG_ENABLE_CONSOLE || true
+    Name: config.Name,
+    File: process.env.LOG_PATH,
+    Level: process.env.LOG_LEVEL || 'error',
+    Console: process.env.LOG_CONSOLE || true
 };

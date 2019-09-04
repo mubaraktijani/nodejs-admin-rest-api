@@ -18,6 +18,7 @@ Bookshelf.Model.PasswordMismatchError = PasswordMismatchError;
  */
 Bookshelf.plugin('virtuals');
 Bookshelf.plugin('visibility');
+Bookshelf.plugin(require('bookshelf-eloquent'));
 Bookshelf.plugin('registry'); // Resolve circular dependencies with relations
 
 module.exports = Bookshelf;
